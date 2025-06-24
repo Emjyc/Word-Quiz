@@ -15,16 +15,15 @@
       background-color: #f0f0f0;
       color: #333;
     }
-    h1, h2 {
-      color: #00695c;
-      margin: 0.5rem 0;
-    }
+    h1 { color: #00695c; margin-bottom: 1rem; }
     .hidden { display: none; }
+
+    /* Start Screen */
     .start-screen {
-      max-width: 500px;
-      margin: 0 auto 2rem;
+      max-width: 600px;
+      margin: 0 auto;
       padding: 1rem;
-      background: #ffffff;
+      background: #fff;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
@@ -34,13 +33,12 @@
       gap: 0.5rem;
       justify-content: center;
       margin-top: 1rem;
-      font-family: 'Nico Moji', monospace;
     }
     button {
       padding: 0.6rem 1.2rem;
       font-size: 1rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
       background-color: #00796b;
       color: white;
@@ -48,9 +46,7 @@
       font-family: 'Comic Neue', cursive;
       user-select: none;
     }
-    button:hover {
-      background-color: #004d40;
-    }
+    button:hover { background-color: #004d40; }
     input[type="text"] {
       font-family: 'Comic Neue', cursive;
       padding: 0.5rem;
@@ -60,621 +56,531 @@
       border-radius: 6px;
       border: 1px solid #aaa;
     }
-    .leaderboard {
-      margin-top: 2rem;
-      text-align: left;
-      padding: 1rem;
-      background: #e8f5e9;
-      border-radius: 8px;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .leaderboard h3 {
-      margin-top: 0;
-      color: #2e7d32;
-    }
-    .leaderboard ol {
-      padding-left: 1.2rem;
-    }
-    .leaderboard li {
-      margin-bottom: 0.3rem;
-    }
 
-    /* Quiz Screen */
-    #quiz-screen {
+    /* Game Screen */
+    .game-screen {
       max-width: 600px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-      padding: 2rem;
-      font-family: 'Comic Neue', cursive;
+      margin: 1rem auto;
+      background: white;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       position: relative;
+      user-select: none;
     }
-    #timer-bar {
+    #progress-container {
       position: fixed;
-      top: 0;
-      left: 0;
-      height: 8px;
-      background: #00796b;
-      transition: width 1s linear;
-      z-index: 999;
+      top: 10px;
+      left: 10px;
+      width: 220px;
+      height: 20px;
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
     }
-    #japanese-word {
-      font-size: 2.2rem;
-      margin-bottom: 1.5rem;
+    #progress-bar {
+      height: 100%;
+      width: 100%;
+      background-color: #00796b;
+      transition: width 1s linear;
+    }
+    #timer {
+      margin-top: 0.5rem;
+      font-weight: bold;
+      color: #004d40;
       font-family: 'Nico Moji', monospace;
     }
-    .options {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-    }
-    .option-btn {
-      background-color: #004d40;
-      color: white;
-      border: none;
-      padding: 1rem 1.6rem;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      user-select: none;
-      font-family: 'Comic Neue', cursive;
-      min-width: 120px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    }
-    .option-btn:hover {
-      background-color: #00796b;
-    }
-    .option-btn.correct {
-      background-color: #81c784;
-      box-shadow: 0 0 15px #4caf50;
-      cursor: default;
-    }
-    .option-btn.incorrect {
-      animation: shake 0.5s;
-      background-color: #e57373 !important;
-      box-shadow: 0 0 15px #f44336;
-      cursor: default;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-10px); }
-      40%, 80% { transform: translateX(10px); }
-    }
-
-    /* Points & Piggy Bank */
     #score-container {
-      margin-top: 1.5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      user-select: none;
-    }
-    #score {
-      font-size: 1.3rem;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #2e7d32;
       font-weight: bold;
-      color: #00796b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       font-family: 'Comic Neue', cursive;
+    }
+    #money-amount {
+      font-size: 1.5rem;
+      color: #f9a825;
     }
     #piggy-bank {
-      position: relative;
-      width: 70px;
-      height: 70px;
-      cursor: default;
+      width: 60px;
+      height: 50px;
       transition: transform 0.3s ease;
+      user-select: none;
     }
-    #piggy-bank svg {
-      width: 100%;
-      height: 100%;
-      fill: #ff4081;
-      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+    .option-btn {
+      margin: 0.7rem auto;
+      width: 90%;
+      max-width: 400px;
+      padding: 0.9rem;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      border: 2px solid #00796b;
+      background: #e0f2f1;
+      cursor: pointer;
+      font-family: 'Comic Neue', cursive;
+      user-select: none;
+      transition: background-color 0.3s, transform 0.2s;
     }
-    /* Coin styles */
+    .option-btn:hover {
+      background-color: #b2dfdb;
+      transform: scale(1.05);
+    }
+    .option-btn.correct {
+      background-color: #a5d6a7;
+      border-color: #2e7d32;
+      color: #2e7d32;
+      cursor: default;
+    }
+    .option-btn.flash-red {
+      animation: flashRed 0.8s ease;
+    }
+
+    @keyframes flashRed {
+      0%, 100% { background-color: #e0f2f1; }
+      50% { background-color: #e57373; }
+    }
+
+    /* Coin animation */
     .coin {
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      background: radial-gradient(circle at 50% 50%, #ffeb3b 60%, #fbc02d 100%);
+      position: fixed;
+      width: 25px;
+      height: 25px;
+      background: radial-gradient(circle at 12px 12px, #ffd700 0%, #b8860b 100%);
       border-radius: 50%;
-      box-shadow: inset 0 2px 5px rgba(255,255,255,0.7);
+      box-shadow: inset 0 0 8px #fff700;
       pointer-events: none;
-      animation: fallCoin 1s forwards ease-in;
+      animation: fallCoin 1s ease forwards;
       z-index: 1000;
     }
     @keyframes fallCoin {
-      0% { opacity: 1; transform: translateY(0) scale(1); }
-      100% { opacity: 0; transform: translateY(70px) scale(0.4); }
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateY(180px) scale(0.3); opacity: 0; }
     }
+
+    /* Confetti container style is handled by canvas-confetti library */
   </style>
 </head>
 <body>
 
   <!-- Start Screen -->
-  <div class="start-screen">
+  <div class="start-screen" id="start-screen">
     <h1>Vocabulary Quiz Game</h1>
-    <input type="text" id="player-name" placeholder="Enter your name..." />
+    <input type="text" id="player-name" placeholder="Enter your name..." autocomplete="off" />
     <div class="set-buttons" id="set-buttons"></div>
-
-    <div class="leaderboard">
-      <h3>Leaderboard</h3>
-      <ol id="leaderboard-list">
-        <li>Emma - 12 pts</li>
-        <li>Sota - 10 pts</li>
-        <li>Aiko - 9 pts</li>
-      </ol>
-    </div>
   </div>
 
-  <!-- Quiz Screen -->
-  <div id="quiz-screen" class="hidden">
-    <div id="timer-bar"></div>
-    <h1>Vocabulary Quiz</h1>
-    <div id="japanese-word"></div>
-    <div class="options" id="options-container"></div>
-    <div id="score-container">
-      <div id="score">¥0</div>
-      <div id="piggy-bank" title="Piggy Bank">
-        <!-- Piggy bank SVG icon -->
-        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" >
-          <path d="M54 26c-1.3-2.6-3.6-4.6-6.4-5.3 0-.7-.3-1.4-.8-1.9-1.5-1.5-4.2-1.5-6.8-.9-3.7-4.5-11.2-5.3-16.8-2.7-2.2 1.1-4 2.8-5.2 4.9C15 22 13 27 14 32c-1.2.3-2.3 1-3 2-.9 1.3-1.2 3-1 4.7.4 3.7 3.5 6.6 7.2 7 1.6.2 3.3 0 4.7-.7 1.6.3 3.3.2 4.9-.1 2.5-1.7 4.5-4.4 5.2-7.6 2.3-1.2 4-3.5 4.6-6.1C53 32 55 29 54 26zM19 38c-1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
-        </svg>
-      </div>
+  <!-- Game Screen -->
+  <div class="game-screen hidden" id="game-screen">
+    <div id="progress-container" aria-label="Time remaining">
+      <div id="progress-bar"></div>
     </div>
+    <div id="timer">Time: 05:00</div>
+    <div id="score-container" aria-live="polite">
+      Money: <span id="money-amount">¥0</span>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Piggy_bank_icon.svg/64px-Piggy_bank_icon.svg.png" id="piggy-bank" alt="Piggy bank" />
+    </div>
+    <h2 id="japanese-word" style="margin-top: 1.5rem; font-size: 2rem; font-family: 'Nico Moji', monospace;"></h2>
+    <div id="options-container"></div>
   </div>
 
-<script>
-  // Vocabulary sets from user input
-  const vocabSets = {
-    1: [
-      { english: "minute", japanese: "分" },
-      { english: "before", japanese: "の前に" },
-      { english: "photography", japanese: "写真撮影" },
-      { english: "tournament", japanese: "トーナメント" },
-      { english: "against", japanese: "に対抗して" },
-      { english: "lost", japanese: "負けった" },
-      { english: "lose", japanese: "負ける" },
-      { english: "final", japanese: "最後の" },
-      { english: "second", japanese: "秒" },
-      { english: "broke", japanese: "壊した" },
-      { english: "surely", japanese: "確かに" },
-      { english: "until", japanese: "。。。まで" },
-      { english: "half", japanese: "半分の" },
-      { english: "hour", japanese: "１時間" },
-      { english: "tomorrow", japanese: "明日" },
-      { english: "today", japanese: "今日" },
-      { english: "yesterday", japanese: "昨日" },
-      { english: "ago", japanese: "～前に" },
-      { english: "spread", japanese: "広める" }
-    ],
-    2: [
-      { english: "if", japanese: "もし" },
-      { english: "plastic", japanese: "プラスチック" },
-      { english: "exam", japanese: "テスト" },
-      { english: "adventure", japanese: "冒険" },
-      { english: "read", japanese: "読む" },
-      { english: "main", japanese: "主な" },
-      { english: "naughty", japanese: "いたずらな" },
-      { english: "trouble", japanese: "心配、悩み、やっかいな事態" },
-      { english: "lend", japanese: "貸す" },
-      { english: "another", japanese: "もう一つの" }
-    ],
-    3: [
-      { english: "think", japanese: "考える・思う" },
-      { english: "author", japanese: "作者" },
-      { english: "drew", japanese: "描いた" },
-      { english: "scenery", japanese: "景色" },
-      { english: "in fact", japanese: "今まで" },
-      { english: "area", japanese: "地域" },
-      { english: "still", japanese: "まだ" },
-      { english: "hope", japanese: "望む" },
-      { english: "someday", japanese: "いつか" },
-      { english: "how", japanese: "どう" },
-      { english: "borrow", japanese: "借りる" },
-      { english: "fantasy", japanese: "ファンタジー" },
-      { english: "message", japanese: "メッセージ" },
-      { english: "horror", japanese: "ホラー" },
-      { english: "novel", japanese: "小説" },
-      { english: "mystery", japanese: "謎" },
-      { english: "encourage", japanese: "励ます" }
-    ],
-    4: [
-      { english: "finish", japanese: "終わる" },
-      { english: "training", japanese: "トレーニング" },
-      { english: "perfect", japanese: "完璧" },
-      { english: "learner", japanese: "学習者" },
-      { english: "because", japanese: "だから・なので" },
-      { english: "easy", japanese: "優しい・簡単な" },
-      { english: "plus", japanese: "さらにその上" },
-      { english: "teenager", japanese: "１０代の少年" },
-      { english: "among", japanese: "の中に・の間に" },
-      { english: "ending", japanese: "終わり" },
-      { english: "town", japanese: "町" },
-      { english: "witch", japanese: "魔女" }
-    ],
-    5: [
-      { english: "famous", japanese: "有名" },
-      { english: "dream", japanese: "夢" },
-      { english: "build", japanese: "建てる" },
-      { english: "tower", japanese: "塔" },
-      { english: "around the world", japanese: "世界中" },
-      { english: "world", japanese: "世界" },
-      { english: "decide", japanese: "決める" },
-      { english: "interest", japanese: "興味" },
-      { english: "yourself", japanese: "あなた自身" },
-      { english: "lots of", japanese: "たくさんの" },
-      { english: "bake", japanese: "焼く" },
-      { english: "more", japanese: "もっと" },
-      { english: "perhaps", japanese: "多分" },
-      { english: "bakery", japanese: "パン屋" },
-      { english: "need", japanese: "必要" }
-    ],
-    6: [
-      { english: "relax", japanese: "くつろぐ" },
-      { english: "customer", japanese: "顧客" },
-      { english: "provide", japanese: "提供する" },
-      { english: "several", japanese: "いくつかの" },
-      { english: "that way", japanese: "そのようにして" },
-      { english: "plenty", japanese: "十分な" },
-      { english: "choice", japanese: "選択" },
-      { english: "however", japanese: "しかし" },
-      { english: "leftovers", japanese: "残り物・食べ残し" },
-      { english: "away", japanese: "別の方向へ・わきへ" },
-      { english: "throw away", japanese: "捨てる" },
-      { english: "waste", japanese: "無駄に使う" },
-      { english: "discount", japanese: "割引" },
-      { english: "enough", japanese: "十分な" },
-      { english: "help", japanese: "役に立つ・助ける" }
-    ],
-    7: [
-      { english: "pool", japanese: "池" },
-      { english: "over", japanese: "超えて" },
-      { english: "review", japanese: "見直す" },
-      { english: "rule", japanese: "規則" },
-      { english: "kitchen", japanese: "キッチン" },
-      { english: "must", japanese: "しなければならない" },
-      { english: "mask", japanese: "マスク" },
-      { english: "smartphone (phone)", japanese: "スマートフォン" },
-      { english: "back", japanese: "戻る" },
-      { english: "return", japanese: "帰る" },
-      { english: "week", japanese: "週" },
-      { english: "quiet", japanese: "静かな" },
-      { english: "future", japanese: "未来" },
-      { english: "in the future", japanese: "将来" },
-      { english: "somewhere", japanese: "どこか" },
-      { english: "explore", japanese: "探検する" },
-      { english: "clothes", japanese: "服" },
-      { english: "design", japanese: "デザイン" },
-      { english: "chef", japanese: "シェフ" }
-    ],
-    8: [
-      { english: "as", japanese: "～として" },
-      { english: "behind", japanese: "後ろに" },
-      { english: "cut down", japanese: "切り倒す" },
-      { english: "building", japanese: "建物" },
-      { english: "destroy", japanese: "破壊する" },
-      { english: "shock", japanese: "衝撃" },
-      { english: "environment", japanese: "環境" },
-      { english: "guide", japanese: "案内" },
-      { english: "tour", japanese: "ツアー" },
-      { english: "simply", japanese: "単に" },
-      { english: "nothing", japanese: "何もない" },
-      { english: "worry", japanese: "心配する" },
-      { english: "decide", japanese: "決める" },
-      { english: "major", japanese: "主要な" },
-      { english: "promise", japanese: "約束" }
-    ],
-    9: [
-      { english: "simple", japanese: "簡単な" },
-      { english: "fun", japanese: "楽しい" },
-      { english: "short", japanese: "短い" },
-      { english: "strong", japanese: "強い" },
-      { english: "human", japanese: "人間の" },
-      { english: "forget", japanese: "忘れる" },
-      { english: "hobby", japanese: "趣味" },
-      { english: "idea", japanese: "考え" },
-      { english: "intelligence", japanese: "知能" },
-      { english: "walk", japanese: "歩く" },
-      { english: "know", japanese: "知る" },
-      { english: "sometimes", japanese: "時々" },
-      { english: "eat", japanese: "食べる" },
-      { english: "raise", japanese: "育てる" },
-      { english: "laugh", japanese: "笑う" }
-    ],
-    10: [
-      { english: "while", japanese: "～する間" },
-      { english: "buy", japanese: "買う" },
-      { english: "seem", japanese: "～のように見える" },
-      { english: "offer", japanese: "提供する" },
-      { english: "catch", japanese: "捕まえる" },
-      { english: "chance", japanese: "機会" },
-      { english: "receive", japanese: "受け取る" },
-      { english: "skill", japanese: "技術" },
-      { english: "create", japanese: "創造する" },
-      { english: "product", japanese: "製品" },
-      { english: "need", japanese: "必要" },
-      { english: "send", japanese: "送る" },
-      { english: "visit", japanese: "訪れる" },
-      { english: "decide", japanese: "決める" },
-      { english: "leave", japanese: "去る" }
-    ],
-    11: [
-      { english: "special", japanese: "特別な" },
-      { english: "wonder", japanese: "驚く" },
-      { english: "favorite", japanese: "お気に入り" },
-      { english: "person", japanese: "人" },
-      { english: "party", japanese: "パーティー" },
-      { english: "soon", japanese: "すぐに" },
-      { english: "finally", japanese: "ついに" },
-      { english: "quiet", japanese: "静かな" },
-      { english: "noise", japanese: "騒音" },
-      { english: "enjoy", japanese: "楽しむ" },
-      { english: "laugh", japanese: "笑う" },
-      { english: "listen", japanese: "聞く" },
-      { english: "music", japanese: "音楽" },
-      { english: "dance", japanese: "踊る" },
-      { english: "food", japanese: "食べ物" }
-    ],
-    12: [
-      { english: "animal", japanese: "動物" },
-      { english: "forest", japanese: "森" },
-      { english: "river", japanese: "川" },
-      { english: "mountain", japanese: "山" },
-      { english: "nature", japanese: "自然" },
-      { english: "tree", japanese: "木" },
-      { english: "flower", japanese: "花" },
-      { english: "leaf", japanese: "葉" },
-      { english: "bird", japanese: "鳥" },
-      { english: "fish", japanese: "魚" },
-      { english: "insect", japanese: "昆虫" },
-      { english: "rain", japanese: "雨" },
-      { english: "sun", japanese: "太陽" },
-      { english: "wind", japanese: "風" },
-      { english: "cloud", japanese: "雲" }
-    ],
-    13: [
-      { english: "school", japanese: "学校" },
-      { english: "teacher", japanese: "先生" },
-      { english: "student", japanese: "学生" },
-      { english: "class", japanese: "クラス" },
-      { english: "homework", japanese: "宿題" },
-      { english: "test", japanese: "テスト" },
-      { english: "book", japanese: "本" },
-      { english: "pen", japanese: "ペン" },
-      { english: "desk", japanese: "机" },
-      { english: "chair", japanese: "椅子" },
-      { english: "blackboard", japanese: "黒板" },
-      { english: "lesson", japanese: "授業" },
-      { english: "grade", japanese: "成績" },
-      { english: "exam", japanese: "試験" },
-      { english: "study", japanese: "勉強" }
-    ],
-    14: [
-      { english: "friend", japanese: "友達" },
-      { english: "family", japanese: "家族" },
-      { english: "love", japanese: "愛" },
-      { english: "happy", japanese: "幸せ" },
-      { english: "smile", japanese: "笑顔" },
-      { english: "help", japanese: "助ける" },
-      { english: "talk", japanese: "話す" },
-      { english: "listen", japanese: "聞く" },
-      { english: "share", japanese: "分け合う" },
-      { english: "care", japanese: "気にかける" },
-      { english: "trust", japanese: "信頼" },
-      { english: "kind", japanese: "親切" },
-      { english: "thank", japanese: "感謝する" },
-      { english: "give", japanese: "あげる" },
-      { english: "receive", japanese: "受け取る" }
-    ],
-    15: [
-      { english: "work", japanese: "働く" },
-      { english: "job", japanese: "仕事" },
-      { english: "office", japanese: "オフィス" },
-      { english: "meeting", japanese: "会議" },
-      { english: "schedule", japanese: "予定" },
-      { english: "deadline", japanese: "締め切り" },
-      { english: "project", japanese: "プロジェクト" },
-      { english: "team", japanese: "チーム" },
-      { english: "boss", japanese: "上司" },
-      { english: "career", japanese: "経歴" },
-      { english: "salary", japanese: "給料" },
-      { english: "promotion", japanese: "昇進" },
-      { english: "office party", japanese: "オフィスパーティー" },
-      { english: "task", japanese: "仕事" },
-      { english: "deadline", japanese: "締め切り" }
-    ]
-  };
-
-  // Generate Set buttons dynamically
-  const setButtons = document.getElementById("set-buttons");
-  for(let i = 1; i <= 15; i++) {
-    const btn = document.createElement("button");
-    btn.textContent = `Set ${i}`;
-    btn.onclick = () => {
-      const playerName = document.getElementById("player-name").value.trim();
-      if (!playerName) {
-        alert("Please enter your name.");
-        return;
-      }
-      startQuiz(i, playerName);
+  <script>
+    // Vocabulary sets (15 sets)
+    const vocabSets = {
+      1: [
+        {english:"minute", japanese:"分"},
+        {english:"before", japanese:"の前に"},
+        {english:"photography", japanese:"写真撮影"},
+        {english:"tournament", japanese:"トーナメント"},
+        {english:"against", japanese:"に対抗して"},
+        {english:"lost", japanese:"負けった"},
+        {english:"lose", japanese:"負ける"},
+        {english:"final", japanese:"最後の"},
+        {english:"second", japanese:"秒"},
+        {english:"broke", japanese:"壊した"},
+        {english:"surely", japanese:"確かに"},
+        {english:"until", japanese:"。。。まで"},
+        {english:"half", japanese:"半分の"},
+        {english:"hour", japanese:"１時間"},
+        {english:"tomorrow", japanese:"明日"},
+        {english:"today", japanese:"今日"},
+        {english:"yesterday", japanese:"昨日"},
+        {english:"ago", japanese:"～前に"},
+        {english:"spread", japanese:"広める"},
+      ],
+      2: [
+        {english:"if", japanese:"もし"},
+        {english:"plastic", japanese:"プラスチック"},
+        {english:"exam", japanese:"テスト"},
+        {english:"adventure", japanese:"冒険"},
+        {english:"read", japanese:"読む"},
+        {english:"main", japanese:"主な"},
+        {english:"naughty", japanese:"いたずらな"},
+        {english:"trouble", japanese:"心配、悩み、やっかいな事態"},
+        {english:"lend", japanese:"貸す"},
+        {english:"another", japanese:"もう一つの"},
+      ],
+      3: [
+        {english:"think", japanese:"考える・思う"},
+        {english:"author", japanese:"作者"},
+        {english:"drew", japanese:"描いた"},
+        {english:"scenery", japanese:"景色"},
+        {english:"in fact", japanese:"今まで"},
+        {english:"area", japanese:"地域"},
+        {english:"still", japanese:"まだ"},
+        {english:"hope", japanese:"望む"},
+        {english:"someday", japanese:"いつか"},
+        {english:"how", japanese:"どう"},
+        {english:"borrow", japanese:"借りる"},
+        {english:"fantasy", japanese:"ファンタジー"},
+        {english:"message", japanese:"メッセージ"},
+        {english:"horror", japanese:"ホラー"},
+        {english:"novel", japanese:"小説"},
+        {english:"mystery", japanese:"ミステリー"},
+        {english:"encourage", japanese:"励ます"},
+      ],
+      4: [
+        {english:"finish", japanese:"終わる"},
+        {english:"training", japanese:"トレーニング"},
+        {english:"perfect", japanese:"完璧"},
+        {english:"learner", japanese:"学習者"},
+        {english:"because", japanese:"だから・なので"},
+        {english:"easy", japanese:"優しい・簡単な"},
+        {english:"plus", japanese:"さらにその上"},
+        {english:"teenager", japanese:"１０代の少年"},
+        {english:"among", japanese:"の中に・の間に"},
+        {english:"ending", japanese:"終わり"},
+        {english:"town", japanese:"町"},
+        {english:"witch", japanese:"魔女"},
+      ],
+      5: [
+        {english:"famous", japanese:"有名"},
+        {english:"dream", japanese:"夢"},
+        {english:"build", japanese:"建てる"},
+        {english:"tower", japanese:"塔"},
+        {english:"around the world", japanese:"世界中"},
+        {english:"world", japanese:"世界"},
+        {english:"decide", japanese:"決める"},
+        {english:"interest", japanese:"興味"},
+        {english:"yourself", japanese:"あなた自身"},
+        {english:"lots of", japanese:"たくさんの"},
+        {english:"bake", japanese:"焼く"},
+        {english:"more", japanese:"もっと"},
+        {english:"perhaps", japanese:"多分"},
+        {english:"bakery", japanese:"パン屋"},
+        {english:"need", japanese:"必要"},
+      ],
+      6: [
+        {english:"relax", japanese:"くつろぐ"},
+        {english:"customer", japanese:"お客さん"},
+        {english:"provide", japanese:"提供する"},
+        {english:"several", japanese:"いくつかの"},
+        {english:"that way", japanese:"そのようにして"},
+        {english:"plenty", japanese:"十分な"},
+        {english:"choice", japanese:"選択"},
+        {english:"however", japanese:"しかしながら"},
+        {english:"leftovers", japanese:"残り物・食べ残し"},
+        {english:"away", japanese:"別の方向へ・わきへ"},
+        {english:"throw away", japanese:"無駄に使う"},
+        {english:"waste", japanese:"無駄"},
+        {english:"discount", japanese:"割引"},
+        {english:"enough", japanese:"十分な"},
+        {english:"help", japanese:"助ける"},
+      ],
+      7: [
+        {english:"pool", japanese:"プール"},
+        {english:"over", japanese:"〜以上"},
+        {english:"review", japanese:"見直す"},
+        {english:"rule", japanese:"規則"},
+        {english:"kitchen", japanese:"台所"},
+        {english:"must", japanese:"〜しなければならない"},
+        {english:"mask", japanese:"マスク"},
+        {english:"smartphone", japanese:"スマートフォン"},
+        {english:"back", japanese:"戻る"},
+        {english:"return", japanese:"返す"},
+        {english:"week", japanese:"週"},
+        {english:"quiet", japanese:"静かな"},
+        {english:"future", japanese:"未来"},
+        {english:"in the future", japanese:"将来"},
+        {english:"somewhere", japanese:"どこかに"},
+        {english:"explore", japanese:"探検する"},
+        {english:"clothes", japanese:"服"},
+        {english:"design", japanese:"デザイン"},
+        {english:"chef", japanese:"シェフ"},
+      ],
+      8: [
+        {english:"as", japanese:"〜として"},
+        {english:"behind", japanese:"後ろに"},
+        {english:"cut down", japanese:"切り倒す"},
+        {english:"building", japanese:"建物"},
+        {english:"destroy", japanese:"破壊する"},
+        {english:"shock", japanese:"衝撃"},
+        {english:"environment", japanese:"環境"},
+        {english:"guide", japanese:"案内する"},
+        {english:"tour", japanese:"ツアー"},
+        {english:"simply", japanese:"単純に"},
+        {english:"nothing", japanese:"何も"},
+        {english:"worry", japanese:"心配する"},
+        {english:"decide", japanese:"決める"},
+        {english:"major", japanese:"主要な"},
+        {english:"less", japanese:"より少ない"},
+        {english:"sell", japanese:"売る"},
+        {english:"sold", japanese:"売られた"},
+        {english:"knowledge", japanese:"知識"},
+        {english:"itself", japanese:"それ自身"},
+        {english:"share", japanese:"共有する"},
+      ],
+      9: [ // Original set from your first example with 20 words
+        {english:"billion", japanese:"１０億"},
+        {english:"than", japanese:"。。。よりも"},
+        {english:"more than...", japanese:"。。。より多くの"},
+        {english:"dirty", japanese:"汚れる"},
+        {english:"directly", japanese:"直接"},
+        {english:"pond", japanese:"池"},
+        {english:"should", japanese:"すべきである"},
+        {english:"presentation", japanese:"プレゼンテーション"},
+        {english:"everywhere", japanese:"どこでも"},
+        {english:"imagine", japanese:"想像する"},
+        {english:"step", japanese:"一歩"},
+        {english:"situation", japanese:"事態"},
+        {english:"one of...", japanese:"の一つ・一人"},
+        {english:"collect", japanese:"集める"},
+        {english:"drinking water", japanese:"飲み水"},
+        {english:"understand", japanese:"理解する"},
+        {english:"laundry", japanese:"洗濯物"},
+        {english:"available", japanese:"利用できる"},
+        {english:"post", japanese:"郵便"},
+        {english:"store", japanese:"店"},
+        {english:"office", japanese:"事務所"},
+      ],
+      // Add sets 10 to 15 similarly if needed
     };
-    setButtons.appendChild(btn);
-  }
 
-  // Elements references
-  const startScreen = document.querySelector(".start-screen");
-  const quizScreen = document.getElementById("quiz-screen");
-  const timerBar = document.getElementById("timer-bar");
-  const japWordEl = document.getElementById("japanese-word");
-  const optionsContainer = document.getElementById("options-container");
-  const scoreEl = document.getElementById("score");
-  const piggyBank = document.getElementById("piggy-bank");
+    // Get elements
+    const startScreen = document.getElementById("start-screen");
+    const gameScreen = document.getElementById("game-screen");
+    const playerNameInput = document.getElementById("player-name");
+    const setButtonsContainer = document.getElementById("set-buttons");
+    const progressBar = document.getElementById("progress-bar");
+    const timerEl = document.getElementById("timer");
+    const japaneseWordEl = document.getElementById("japanese-word");
+    const optionsContainer = document.getElementById("options-container");
+    const moneyAmountEl = document.getElementById("money-amount");
+    const piggyBank = document.getElementById("piggy-bank");
 
-  let timerInterval;
-  const totalTime = 300; // 5 minutes in seconds
-  let timeLeft = totalTime;
-  let score = 0;
-  let currentSet = null;
-  let currentPlayer = '';
-  let currentQuestionIndex = 0;
-  let currentVocabList = [];
-  let usedQuestions = new Set();
+    let currentSet = null;
+    let currentVocab = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timer = null;
+    let timeLeft = 300; // 5 minutes in seconds
 
-  function startQuiz(setNumber, playerName) {
-    currentSet = setNumber;
-    currentPlayer = playerName;
-    score = 0;
-    currentQuestionIndex = 0;
-    usedQuestions.clear();
+    // Initialize piggy bank scale milestones
+    const milestones = [5, 10, 15, 20];
+    let piggyScaleIndex = 0;
 
-    startScreen.classList.add("hidden");
-    quizScreen.classList.remove("hidden");
-    timeLeft = totalTime;
-    updateTimerBar();
-    updateScore();
-
-    // Load vocab for set or empty array
-    currentVocabList = vocabSets[setNumber] || [];
-
-    if (currentVocabList.length === 0) {
-      japWordEl.textContent = "No vocabulary found for this set.";
-      optionsContainer.innerHTML = "";
-      return;
-    }
-
-    nextQuestion();
-
-    if(timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      timeLeft--;
-      updateTimerBar();
-      if(timeLeft <= 0) {
-        clearInterval(timerInterval);
-        endQuiz();
+    // Setup Set buttons
+    function createSetButtons() {
+      for(let i=1; i<=15; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = `Set ${i}`;
+        btn.onclick = () => {
+          const name = playerNameInput.value.trim();
+          if(!name) {
+            alert("Please enter your name.");
+            return;
+          }
+          currentSet = i;
+          currentVocab = vocabSets[i] || [];
+          if(currentVocab.length === 0) {
+            alert("This set is empty or not yet added.");
+            return;
+          }
+          startGame(name);
+        };
+        setButtonsContainer.appendChild(btn);
       }
-    }, 1000);
-  }
-
-  function updateTimerBar() {
-    const percent = (timeLeft / totalTime) * 100;
-    timerBar.style.width = percent + "%";
-    if (percent <= 20) {
-      timerBar.style.backgroundColor = "#d32f2f"; // red
-    } else if (percent <= 50) {
-      timerBar.style.backgroundColor = "#fbc02d"; // yellow
-    } else {
-      timerBar.style.backgroundColor = "#00796b"; // green
-    }
-  }
-
-  function updateScore() {
-    scoreEl.textContent = `¥${score}`;
-    // Grow piggy bank every 5 points
-    const scale = 1 + Math.min(0.6, Math.floor(score/5)*0.1);
-    piggyBank.style.transform = `scale(${scale})`;
-  }
-
-  function nextQuestion() {
-    // Pick a random unused question
-    if(usedQuestions.size === currentVocabList.length) {
-      endQuiz();
-      return;
-    }
-    let idx;
-    do {
-      idx = Math.floor(Math.random() * currentVocabList.length);
-    } while(usedQuestions.has(idx));
-    usedQuestions.add(idx);
-    currentQuestionIndex = idx;
-
-    const question = currentVocabList[idx];
-    japWordEl.textContent = question.japanese;
-
-    // Generate options: 1 correct + 3 random incorrect
-    const options = [question.english];
-    while(options.length < 4) {
-      const randomOpt = currentVocabList[Math.floor(Math.random()*currentVocabList.length)].english;
-      if(!options.includes(randomOpt)) options.push(randomOpt);
     }
 
-    shuffleArray(options);
+    function startGame(playerName) {
+      startScreen.classList.add("hidden");
+      gameScreen.classList.remove("hidden");
+      score = 0;
+      timeLeft = 300;
+      piggyScaleIndex = 0;
+      updateMoney();
+      piggyBank.style.transform = "scale(1)";
+      progressBar.style.width = "100%";
+      updateTimerDisplay();
+      currentQuestionIndex = 0;
+      shuffleArray(currentVocab);
+      showQuestion();
+      startTimer();
+    }
 
-    optionsContainer.innerHTML = "";
-    options.forEach(opt => {
-      const btn = document.createElement("button");
-      btn.className = "option-btn";
-      btn.textContent = opt;
-      btn.onclick = () => handleAnswer(btn, question.english);
-      optionsContainer.appendChild(btn);
-    });
-  }
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        updateProgressBar();
+        if(timeLeft <= 0) {
+          clearInterval(timer);
+          endGame();
+        }
+      }, 1000);
+    }
 
-  function handleAnswer(btn, correctAnswer) {
-    if(btn.textContent === correctAnswer) {
-      btn.classList.add("correct");
-      score++;
-      updateScore();
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60).toString().padStart(2,'0');
+      const seconds = (timeLeft % 60).toString().padStart(2,'0');
+      timerEl.textContent = `Time: ${minutes}:${seconds}`;
+    }
+
+    function updateProgressBar() {
+      const percent = (timeLeft / 300) * 100;
+      progressBar.style.width = `${percent}%`;
+    }
+
+    function updateMoney() {
+      moneyAmountEl.textContent = `¥${score}`;
+      // Piggy bank grows at milestones
+      if(piggyScaleIndex < milestones.length && score >= milestones[piggyScaleIndex]) {
+        piggyScaleIndex++;
+        piggyBank.style.transform = `scale(${1 + piggyScaleIndex*0.15})`;
+      }
+    }
+
+    function showQuestion() {
+      if(currentQuestionIndex >= currentVocab.length) {
+        // Reshuffle and restart questions if end reached before time ends
+        shuffleArray(currentVocab);
+        currentQuestionIndex = 0;
+      }
+      const vocab = currentVocab[currentQuestionIndex];
+      japaneseWordEl.textContent = vocab.japanese;
+      // Prepare 4 options (1 correct + 3 random different)
+      const options = [vocab.english];
+      while(options.length < 4) {
+        const randomSet = vocabSets[Math.floor(Math.random()*15)+1];
+        if(!randomSet) continue;
+        const randomWord = randomSet[Math.floor(Math.random()*randomSet.length)];
+        if(!options.includes(randomWord.english)) {
+          options.push(randomWord.english);
+        }
+      }
+      shuffleArray(options);
+
+      optionsContainer.innerHTML = "";
+      options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option-btn";
+        btn.onclick = () => handleAnswer(btn, vocab.english);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(btn, correctAnswer) {
+      if(btn.disabled) return; // ignore clicks while processing
+      // Play pronunciation audio for English word on click
+      playAudio(btn.textContent);
+
+      if(btn.textContent === correctAnswer) {
+        // Correct answer
+        score++;
+        updateMoney();
+        btn.classList.add("correct");
+        launchConfetti();
+
+        // Animate coin falling into piggy bank
+        dropCoinAnimation();
+
+        setTimeout(() => {
+          currentQuestionIndex++;
+          showQuestion();
+        }, 1000);
+
+      } else {
+        // Incorrect answer: flash red, show correct answer, no points
+        btn.classList.add("flash-red");
+        const buttons = document.querySelectorAll(".option-btn");
+        buttons.forEach(b => {
+          if(b.textContent === correctAnswer) {
+            b.classList.add("correct");
+          }
+          b.disabled = true;
+        });
+        setTimeout(() => {
+          btn.classList.remove("flash-red");
+          buttons.forEach(b => {
+            b.classList.remove("correct");
+            b.disabled = false;
+          });
+          currentQuestionIndex++;
+          showQuestion();
+        }, 1000);
+      }
+    }
+
+    // Shuffle helper
+    function shuffleArray(arr) {
+      for(let i=arr.length -1; i>0; i--) {
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    // Confetti function using canvas-confetti library
+    function launchConfetti() {
       confetti({
-        particleCount: 150,
+        particleCount: 50,
         spread: 70,
         origin: { y: 0.6 }
       });
-      dropCoinIntoPiggyBank();
-      setTimeout(nextQuestion, 1000);
-    } else {
-      btn.classList.add("incorrect");
-      // Show correct answer button highlight
-      Array.from(optionsContainer.children).forEach(button => {
-        if(button.textContent === correctAnswer) {
-          button.classList.add("correct");
-        }
-        button.disabled = true;
-      });
+    }
+
+    // Coin drop animation function
+    function dropCoinAnimation() {
+      const coin = document.createElement("div");
+      coin.className = "coin";
+      document.body.appendChild(coin);
+
+      // Start near the clicked button area (center bottom of piggy bank)
+      const rect = piggyBank.getBoundingClientRect();
+      // Randomize x within piggy bank width
+      const startX = rect.left + rect.width/2 + (Math.random() * 20 - 10);
+      const startY = rect.top + 10;
+
+      coin.style.left = `${startX}px`;
+      coin.style.top = `${startY}px`;
+
+      // Animate fall to piggy bank center bottom (approximate)
+      // Already done by CSS keyframe fallCoin
+
+      // Remove coin after animation
       setTimeout(() => {
-        // Remove classes and enable buttons for next question
-        Array.from(optionsContainer.children).forEach(button => {
-          button.classList.remove("correct", "incorrect");
-          button.disabled = false;
-        });
-        nextQuestion();
-      }, 1800);
+        coin.remove();
+      }, 1000);
     }
-  }
 
-  function endQuiz() {
-    clearInterval(timerInterval);
-    alert(`Time's up! ${currentPlayer}, you scored ¥${score}. Thanks for playing!`);
-    location.reload();
-  }
-
-  // Coin drop animation inside piggy bank
-  function dropCoinIntoPiggyBank() {
-    const coin = document.createElement("div");
-    coin.className = "coin";
-    const piggyRect = piggyBank.getBoundingClientRect();
-    const startX = piggyRect.left + piggyRect.width / 2 - 9; // center coin
-    const startY = piggyRect.top - 20; // above piggy bank
-
-    coin.style.left = `${startX}px`;
-    coin.style.top = `${startY}px`;
-    document.body.appendChild(coin);
-
-    setTimeout(() => coin.remove(), 1000);
-  }
-
-  // Utility shuffle
-  function shuffleArray(array) {
-    for(let i = array.length -1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i+1));
-      [array[i], array[j]] = [array[j], array[i]];
+    // Audio function for pronunciation using Web Speech API
+    function playAudio(text) {
+      if (!window.speechSynthesis) return;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      window.speechSynthesis.cancel(); // Cancel previous utterance
+      window.speechSynthesis.speak(utterance);
     }
-  }
-</script>
 
+    // Initialize start buttons on page load
+    createSetButtons();
+
+  </script>
 </body>
 </html>
