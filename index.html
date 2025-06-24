@@ -2,195 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vocabulary Quiz Game</title>
   <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Nico+Moji&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     * { box-sizing: border-box; }
     body {
       font-family: 'Comic Neue', cursive;
-      background-color: #f0f0f0;
-      text-align: center;
       margin: 0;
-      padding: 2rem;
+      padding: 1rem;
+      text-align: center;
+      background-color: #f0f0f0;
       color: #333;
     }
     h1 { color: #00695c; }
-    .hidden { display: none; }
-    .set-buttons button {
-      font-family: 'Comic Neue', cursive;
-      margin: 0.3rem;
+    .quiz-container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .question {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    .options button {
+      display: block;
+      margin: 0.5rem auto;
       padding: 0.6rem 1.2rem;
       font-size: 1rem;
-      background-color: #00796b;
-      color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-    }
-    .set-buttons button:hover {
-      background-color: #004d40;
-    }
-    .question-box {
-      margin-top: 2rem;
-    }
-    .japanese-word {
-      font-family: 'Nico Moji', sans-serif;
-      font-size: 2rem;
-      margin: 1rem 0;
-    }
-    .options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    .options button {
-      padding: 0.8rem;
-      font-size: 1rem;
-      font-family: 'Comic Neue', cursive;
-      background-color: #fff;
-      border: 2px solid #00796b;
-      border-radius: 10px;
-      cursor: pointer;
+      background-color: #00796b;
+      color: white;
       transition: background-color 0.3s;
     }
-    .options button:hover {
-      background-color: #e0f2f1;
-    }
-    #timer, #score {
-      font-weight: bold;
+    .options button:hover { background-color: #004d40; }
+    .scoreboard {
       margin-top: 1rem;
+      font-size: 1.1rem;
     }
-    .correct {
-      background-color: #c8e6c9;
-      border-color: #2e7d32;
+    .progress-bar {
+      height: 20px;
+      width: 100%;
+      background: #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1rem;
     }
-    .incorrect {
-      background-color: #ffcdd2;
-      border-color: #c62828;
+    .progress-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(to right, #66bb6a, #43a047);
+      transition: width 1s linear;
+    }
+    .piggy-bank {
+      width: 60px;
+      height: 60px;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/3369/3369388.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin: 1rem auto;
+      transition: transform 0.3s ease-in-out;
+    }
+    .coin {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/138/138292.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      animation: dropCoin 1s ease-in-out forwards;
+    }
+    @keyframes dropCoin {
+      0% { top: 0; opacity: 1; }
+      100% { top: 85%; opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <h1>Vocabulary Quiz Game</h1>
-  <div id="start-screen">
-    <h2>Select a Vocabulary Set</h2>
-    <div class="set-buttons" id="set-buttons"></div>
-  </div>
-
-  <div id="game-screen" class="hidden">
-    <div id="timer">Time Left: 5:00</div>
-    <div id="score">Score: 0</div>
-    <div class="question-box">
-      <div class="japanese-word" id="japanese-word"></div>
-      <div class="options" id="options"></div>
-    </div>
-  </div>
-
-  <div id="end-screen" class="hidden">
-    <h2>Time's up!</h2>
-    <p>Your final score is: <span id="final-score"></span></p>
-    <button onclick="location.reload()">Play Again</button>
+  <div class="quiz-container">
+    <h1>Lesson 4 New Words</h1>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <div class="question" id="question">Loading...</div>
+    <div class="options" id="options"></div>
+    <div class="piggy-bank" id="piggyBank"></div>
+    <div class="scoreboard">Money: ¥<span id="score">0</span></div>
   </div>
 
   <script>
-    const vocabSets = {
-      1: [
-        { en: "minute", ja: "分" }, { en: "before", ja: "の前に" }, { en: "photography", ja: "写真撮影" },
-        { en: "tournament", ja: "トーナメント" }, { en: "article", ja: "記事" }, { en: "against", ja: "に対抗して" },
-        { en: "lost", ja: "負けった" }, { en: "lose", ja: "負ける" }, { en: "final", ja: "最後の" },
-        { en: "second", ja: "秒" }, { en: "broke", ja: "壊した" }, { en: "surely", ja: "確かに" },
-        { en: "half", ja: "半分の" }, { en: "hour", ja: "１時間" }, { en: "tomorrow", ja: "明日" },
-        { en: "today", ja: "今日" }, { en: "yesterday", ja: "昨日" }, { en: "ago", ja: "～前に" },
-        { en: "spread", ja: "広める" }, { en: "until", ja: "。。。まで" }
-      ],
-      // Add more sets here as needed...
-    };
+    const vocabSet = [
+      { english: "billion", japanese: "１０億" },
+      { english: "than", japanese: "。。。よりも" },
+      { english: "more than...", japanese: "より多くの" },
+      { english: "dirty", japanese: "汚れる" },
+      { english: "directly", japanese: "直接" },
+      { english: "pond", japanese: "池" },
+      { english: "should", japanese: "すべきである" },
+      { english: "presentation", japanese: "プレゼンテーション" },
+      { english: "everywhere", japanese: "でこでも" },
+      { english: "imagine", japanese: "想像する" },
+      { english: "step", japanese: "一歩" },
+      { english: "situation", japanese: "事態" },
+      { english: "one of...", japanese: "の一つ・一人" },
+      { english: "collect", japanese: "取りに行く" },
+      { english: "drinking water", japanese: "飲み水" },
+      { english: "understand", japanese: "理解する" },
+      { english: "laundry", japanese: "洗濯物" },
+      { english: "available", japanese: "入りてできる" },
+      { english: "post", japanese: "郵便" },
+      { english: "store", japanese: "店" },
+      { english: "office", japanese: "事務所" }
+    ];
 
-    const setButtons = document.getElementById("set-buttons");
-    const gameScreen = document.getElementById("game-screen");
-    const startScreen = document.getElementById("start-screen");
-    const endScreen = document.getElementById("end-screen");
-    const japaneseWord = document.getElementById("japanese-word");
-    const optionsContainer = document.getElementById("options");
-    const scoreDisplay = document.getElementById("score");
-    const timerDisplay = document.getElementById("timer");
-    const finalScoreDisplay = document.getElementById("final-score");
-
-    let currentSet = [];
     let score = 0;
+    let time = 300;
     let timer;
-    let timeLeft = 300;
+
+    function updateScore(points) {
+      score += points;
+      document.getElementById("score").textContent = score;
+      dropCoin();
+      celebrate();
+      if (score % 5 === 0) {
+        const bank = document.getElementById("piggyBank");
+        bank.style.transform = "scale(" + (1 + score / 50) + ")";
+      }
+    }
+
+    function dropCoin() {
+      const coin = document.createElement("div");
+      coin.className = "coin";
+      coin.style.left = Math.random() * 80 + 10 + "%";
+      document.body.appendChild(coin);
+      setTimeout(() => coin.remove(), 1000);
+    }
+
+    function celebrate() {
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    }
 
     function startTimer() {
       timer = setInterval(() => {
-        timeLeft--;
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        timerDisplay.textContent = `Time Left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-        if (timeLeft <= 0) endGame();
+        time--;
+        const progress = document.getElementById("progress");
+        progress.style.width = (time / 300 * 100) + "%";
+        if (time <= 0) {
+          clearInterval(timer);
+          document.getElementById("question").textContent = "Time's up! You earned ¥" + score;
+          document.getElementById("options").innerHTML = "";
+        }
       }, 1000);
     }
 
-    function endGame() {
-      clearInterval(timer);
-      gameScreen.classList.add("hidden");
-      endScreen.classList.remove("hidden");
-      finalScoreDisplay.textContent = score;
-    }
+    function nextQuestion() {
+      const current = vocabSet[Math.floor(Math.random() * vocabSet.length)];
+      document.getElementById("question").textContent = current.japanese;
+      const options = [current.english];
 
-    function pickQuestion() {
-      if (currentSet.length < 1) return endGame();
-      const vocab = [...currentSet];
-      const correct = vocab.splice(Math.floor(Math.random() * vocab.length), 1)[0];
-      const choices = [correct];
-      while (choices.length < 4) {
-        const wrong = vocab[Math.floor(Math.random() * vocab.length)];
-        if (wrong && !choices.includes(wrong)) choices.push(wrong);
+      while (options.length < 4) {
+        const choice = vocabSet[Math.floor(Math.random() * vocabSet.length)].english;
+        if (!options.includes(choice)) options.push(choice);
       }
-      choices.sort(() => Math.random() - 0.5);
-      showQuestion(correct, choices);
-    }
+      options.sort(() => Math.random() - 0.5);
 
-    function showQuestion(correct, choices) {
-      japaneseWord.textContent = correct.ja;
-      optionsContainer.innerHTML = "";
-      choices.forEach(choice => {
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+
+      options.forEach(opt => {
         const btn = document.createElement("button");
-        btn.textContent = choice.en;
+        btn.textContent = opt;
         btn.onclick = () => {
-          if (choice === correct) {
-            btn.classList.add("correct");
-            score++;
-            scoreDisplay.textContent = `Score: ${score}`;
+          if (opt === current.english) {
+            updateScore(1);
           } else {
-            btn.classList.add("incorrect");
-            const correctBtn = [...optionsContainer.children].find(b => b.textContent === correct.en);
-            if (correctBtn) correctBtn.classList.add("correct");
+            const correct = document.createElement("div");
+            correct.textContent = "Correct answer: " + current.english;
+            correct.style.color = "red";
+            document.getElementById("question").appendChild(correct);
+            setTimeout(() => correct.remove(), 1500);
           }
-          setTimeout(pickQuestion, 1000);
+          nextQuestion();
         };
-        optionsContainer.appendChild(btn);
+        optionsDiv.appendChild(btn);
       });
     }
 
-    for (let i = 1; i <= 15; i++) {
-      const btn = document.createElement("button");
-      btn.textContent = `Set ${i}`;
-      btn.onclick = () => {
-        if (!vocabSets[i]) return alert("Set not yet added.");
-        currentSet = [...vocabSets[i]];
-        score = 0;
-        timeLeft = 300;
-        scoreDisplay.textContent = `Score: ${score}`;
-        startScreen.classList.add("hidden");
-        gameScreen.classList.remove("hidden");
-        startTimer();
-        pickQuestion();
-      };
-      setButtons.appendChild(btn);
+    window.onload = () => {
+      startTimer();
+      nextQuestion();
     }
   </script>
 </body>
