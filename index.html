@@ -663,7 +663,7 @@
   function handleAnswer(button, correctAnswer) {
     if(button.classList.contains('correct')) return;
 
-    if(button.textContent === correctAnswer) {
+    if(button.textContent === correctAnswer) speakText(correctAnswer);{
       button.classList.add('correct');
       disableOptions();
       addScore(100);
@@ -706,6 +706,14 @@
     score += amount;
     updateScore();
   }
+ 
+ function speakText(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-AU'; // or adjust if needed
+  utterance.rate = 0.9;     // slower is easier to understand
+  utterance.pitch = 1.0;
+  speechSynthesis.speak(utterance);
+}
 
   function spawnCoinFromButton(button) {
     const coin = document.createElement('div');
