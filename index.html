@@ -663,7 +663,8 @@
   function handleAnswer(button, correctAnswer) {
     if(button.classList.contains('correct')) return;
 
-    if(button.textContent === correctAnswer) speakText(correctAnswer);{
+    if(button.textContent === correctAnswer) {
+     speakText(correctAnswer);
       button.classList.add('correct');
       disableOptions();
       addScore(100);
